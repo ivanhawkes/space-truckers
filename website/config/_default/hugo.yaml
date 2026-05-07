@@ -1,0 +1,118 @@
+baseURL: https://spacetruckers.dev
+languageCode: en-us
+title: Space Truckers
+theme: be-best
+MetaDataFormat: yaml
+DefaultContentLanguage: en
+
+# RSS Feed Copyright
+copyright: © 2026 Ivan Hawkes
+params:
+  author:
+    email: ivan.hawkes@gmail.com
+    name: Ivan Hawkes
+
+# RSS and HTML outputs based on page kind
+outputs:
+  home:
+  - html
+  - rss
+  section:
+  - html
+  - rss
+  taxonomy:
+  - html
+  - rss
+  term:
+  - html
+  - rss
+
+# Limit the amount of entries in the RSS feed
+services:
+  rss:
+    limit: 50
+
+# Control pagination settings
+pagination:
+  disableAliases: false
+  pagerSize: 12
+  path: page
+  pygmentsCodeFences: true
+  preserveTaxonomyNames: true
+
+# Enable the use of a cache directory for assets and CSS files
+caches:
+  images:
+    dir: :cacheDir/images
+
+build:
+  noJSConfigInAssets: false
+  useResourceCacheWhen: fallback
+
+  buildStats:
+    enable: true
+    disableClasses: false
+    disableIDs: false
+    disableTags: false
+
+  cachebusters:
+    - source: 'assets/notwatching/hugo_stats\.json'
+      target: css
+    - source: '(postcss|tailwind)\.config\.js'
+      target: css
+    - source: 'themes/.*\.(js|ts|jsx|tsx)$'
+      target: js
+    - source: 'assets/.*\.(.*)$'
+      target: $1
+
+# Alow various utilities to be run when deployed to GitHub Pages
+security:
+  exec:
+    allow:
+      - ^(dart-)?sass(-embedded)?$
+      - ^go$
+      - ^npx$
+      - ^postcss$
+      - ^tailwindcss
+      - ^asciidoctor$
+module:
+  mounts:
+    - source: assets
+      target: assets
+    - disableWatch: true
+      source: hugo_stats.json
+      target: assets/notwatching/hugo_stats.json
+
+# Control how the codeblocks in markdown are rendered
+markup:
+  highlight:
+    style: vulcan
+    noClasses: false
+    lineNos: false
+    lineNoStart: 1
+    hl_inline: false
+
+  goldmark:
+    truncate-lines: true
+    renderer:
+      unsafe: true
+    parser:
+      attribute:
+        block: true
+      wrapStandAloneImageWithinParagraph: false
+    renderHooks:
+      image:
+        useEmbedded: fallback
+
+# Sitemap settings
+sitemap:
+  changeFreq: monthly
+  disable: false
+  filename: sitemap.xml
+  priority: -1
+
+# Create some taxonomies
+taxonomies:
+  category: categories
+  tag: tags
+  series: series

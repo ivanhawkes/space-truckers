@@ -14,8 +14,5 @@ public:
     FName id;
 
     UPROPERTY(EditAnywhere, Category = "Item Data")
-    uint64 seed;
-
-    UPROPERTY(EditAnywhere, Category = "Item Data")
     FText name;
 };

@@ -6,7 +6,6 @@
 #include "SolarSystem.h"
 #include <cstdlib>
 
-
 // Sets default values for this component's properties
 UUniverseComponent::UUniverseComponent()
 {
@@ -35,9 +34,16 @@ void UUniverseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UUniverseComponent::GenerateNewUniverse()
 {
+	const double pi {3.14159265358979323846};
+	const double toRadians {pi / 180.0f};
+
+	// Apply the seed for the randomness of this universe.
+	// TODO: We should probably use a specialty class for random generation instead of the built-in one.
+	srand(randomSeed);
+
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, "Generate new universe", true);
+		GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, "Generate new universe using seed: " + FString::FromInt(randomSeed), true);
 
 		if (solarSystemNames)
 		{
@@ -55,33 +61,34 @@ void UUniverseComponent::GenerateNewUniverse()
 				std::swap(rows[firstRow], rows[secondRow]);
 			}
 
-			const float deadZone {500.0f};
-			const float degreeStep {50.0f};
-			float offsetAngle {0.0f};
-			float linearStepExpansion {190.0f};
-			float linearStep {0.0f};
+			float rotationDegree {0.0f};
+			float expansionOutward {0.0f};
 
 			// Generate a set of solar systems.
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 200; i++)
 			{
+				// Calculate some random offsets. Allowing the offset to be positive or negative.
+				float randomOutward {0.0f};
+				if (randomExpansionOutward > 0.0f)
+					randomOutward = std::rand() % static_cast<int>(randomExpansionOutward * 2.0) - randomExpansionOutward;
+				float randomRotation {0.0f};
+				if (randomRotationDegree > 0.0f)
+					randomRotation = std::rand() % static_cast<int>(randomRotationDegree * 2.0) - randomRotationDegree;
+
 				// Centre of the universe is based on the universe actor location.
 				FVector SpawnLocation = GetOwner()->GetActorLocation();
 				FRotator SpawnRotation = GetOwner()->GetActorRotation();
 
 				// Give the new solar system an offset from the universe.
-				float distance = linearStep + deadZone;
-				float x = cos(offsetAngle) * distance;
-				float y = sin(offsetAngle) * distance;
+				float distance = deadZone + expansionOutward + randomOutward;
+				float x = sin((rotationDegree + randomRotation) * toRadians) * distance;
+				float y = cos((rotationDegree + randomRotation) * toRadians) * distance;
 				SpawnLocation.X += x;
 				SpawnLocation.Y += y;
 
-				// Update the offsets.
-				float randomStepExpansion =  std::rand() % 20;
-				//randomStepExpansion = 0.0f;
-				linearStep += linearStepExpansion + randomStepExpansion;
-				float randomDegreeStep =  std::rand() % 20;
-				//randomDegreeStep = 0.0f;
-				offsetAngle += degreeStep + randomDegreeStep;
+				// Update the rotation and expansion outwards.
+				expansionOutward += fixedExpansionOutward;
+				rotationDegree += fixedRotationDegree;
 
 				auto& row = rows[i];
 

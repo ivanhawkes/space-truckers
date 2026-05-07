@@ -1,5 +1,17 @@
-# Visual Studio 2015 user specific files
+# Node JS
+node_modules/
+
+# Visual Studio Code
 .vs/
+
+# Hugo folders
+public/
+resources/
+.hugo_build.lock
+hugo_stats.json
+
+# Krita
+*~
 
 # Compiled Object files
 *.slo
