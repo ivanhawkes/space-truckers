@@ -1,5 +1,11 @@
-# Visual Studio 2015 user specific files
+# Node JS
+node_modules/
+
+# Visual Studio Code
 .vs/
+
+# Krita
+*~
 
 # Compiled Object files
 *.slo
