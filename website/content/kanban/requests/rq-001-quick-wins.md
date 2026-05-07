@@ -17,14 +17,52 @@ params:
   priority: 350
 ---
 
-A list of quick wins. These are ephemeral and will not be tracked individually.
-They are generally speaking tasks requiring under one hour of time to complete,
-and as little as a few minutes.
-
-Treat this as a scratch pad to jot down ideas quickly before they flee your tiny
-mortal brain.
-
 <!--more-->
 
-# Quick Wins
+Track the easy, fast ideas and tasks here.
 
+## Tables
+
+Add className to their render hook so you can specialise them.
+Custom.css gets colour definition for odd and even rows.
+Use desaturated primary colours for it.
+
+## Space
+
+Corruption 
+Economy prototypes
+  Prototype: "my-parent" - recursive 
+
+Planets can have skins
+
+Randomly generate list of items from loot tables for each trader
+Prices take Economy and Corruption into account.
+
+## Black markets
+
+Have some
+
+Need way to associate multiple tables of goods with trader very much like loot tables.
+
+Trader has array of tables, which are prototypes with an array of entries.
+
+## Loot tables
+
+Prototype
+List of goods
+Price random factor
+Pricing factor (discount e,g. Alliance)
+Corruption factor
+Random chance of being in stock each day, generally quite likely but nice to run out at times
+Quantity, baseline - trader has actual quantity and that varies 
+
+## Trade station events
+
+Space weather
+Famine
+Plaque
+Pestilence 
+Soil depletion
+Etc
+
+Each has chances of happening and their duration. 
