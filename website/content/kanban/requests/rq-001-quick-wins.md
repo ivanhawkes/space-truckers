@@ -28,23 +28,3 @@ mortal brain.
 
 # Quick Wins
 
-- Hamburger menu
-- Search integration
-- Metadata
-- Add resources front matter for each post to give them alt and title attributes
-- Page navigation looks terrible
-- Section pages need banner images, etc to look nice
-- Replace social media icons with Google icons instead of Font Awesome's
-  offerings
-- Add Google programmable search
-  https://programmablesearchengine.google.com/controlpanel/overview?cx=009369891745940219149%3Ahe4cohkrgv4
-- Print mode
-- Fix menus to be hierarchial
-- Remember the basic buttons variants from ShadCN
-  - btn-primary, btn-secondary, btn-accent, btn-ghost, btn-outline, btn-dark,
-    btn-light, btn-destructive, btn-overwrite
-- Craft a decent robots.txt file
-- Implement lazy loading of images e.g. {{ lazyimg...
-- Implement LQIP low resolution versions of images for fast page display
-- Put some good default images into the /assets/images folder to use as
-  fallbacks

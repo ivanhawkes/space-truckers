@@ -4,6 +4,12 @@ node_modules/
 # Visual Studio Code
 .vs/
 
+# Hugo folders
+public/
+resources/
+.hugo_build.lock
+hugo_stats.json
+
 # Krita
 *~
 
