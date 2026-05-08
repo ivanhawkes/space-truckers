@@ -8,5 +8,5 @@
 UCLASS()
 class SPACETRUCKERS_API ASoloGameModeBase : public AGameModeBase
 {
-   GENERATED_BODY()
+	GENERATED_BODY()
 };

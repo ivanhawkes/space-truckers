@@ -7,14 +7,14 @@
 USTRUCT(BlueprintType)
 struct FSun
 {
-   GENERATED_BODY()
+	GENERATED_BODY()
 
-   UPROPERTY(EditAnywhere, Category = "Item Data")
-   FText name;
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FText name;
 
-   UPROPERTY(EditAnywhere, Category = "Item Data")
-   FSolarSystem solarSystem;
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FSolarSystem solarSystem;
 
-   UPROPERTY(EditAnywhere, Category = "Item Data")
-   FTransform transform;
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FTransform transform;
 };

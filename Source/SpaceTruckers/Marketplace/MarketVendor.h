@@ -6,11 +6,11 @@
 USTRUCT(BlueprintType)
 struct FMarketVendor
 {
-   GENERATED_BODY()
+	GENERATED_BODY()
 
-   UPROPERTY(EditAnywhere, Category = "Item Data")
-   FName id;
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FName id;
 
-   UPROPERTY(EditAnywhere, Category = "Item Data")
-   FText name;
+	UPROPERTY(EditAnywhere, Category = "Item Data")
+	FText name;
 };
