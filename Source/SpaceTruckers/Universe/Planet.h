@@ -7,15 +7,14 @@
 USTRUCT(BlueprintType)
 struct FPlanet
 {
-    GENERATED_BODY()
+   GENERATED_BODY()
 
-public:
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FText name;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FText name;
 
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FSun solarSystem;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FSun solarSystem;
 
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FTransform transform;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FTransform transform;
 };

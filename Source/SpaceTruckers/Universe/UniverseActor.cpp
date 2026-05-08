@@ -5,22 +5,21 @@
 // Sets default values
 AUniverseActor::AUniverseActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+   PrimaryActorTick.bCanEverTick = true;
 
-	universeComponent = CreateDefaultSubobject<UUniverseComponent>(TEXT("Universe"), false);
+   universeComponent = CreateDefaultSubobject<UUniverseComponent>(TEXT("Universe"), false);
 }
 
 
 // Called when the game starts or when spawned
 void AUniverseActor::BeginPlay()
 {
-	Super::BeginPlay();
+   Super::BeginPlay();
 }
 
 
 // Called every frame
 void AUniverseActor::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+   Super::Tick(DeltaTime);
 }
-

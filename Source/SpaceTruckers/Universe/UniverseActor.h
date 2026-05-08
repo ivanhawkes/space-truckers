@@ -8,18 +8,18 @@
 UCLASS()
 class SPACETRUCKERS_API AUniverseActor : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AUniverseActor();
+   GENERATED_BODY()
 
-	virtual void Tick(float DeltaTime) override;
+public:
+   // Sets default values for this actor's properties
+   AUniverseActor();
+
+   virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+   // Called when the game starts or when spawned
+   virtual void BeginPlay() override;
 
 private:
-	class UUniverseComponent* universeComponent;
+   class UUniverseComponent* universeComponent;
 };

@@ -9,36 +9,35 @@
 USTRUCT(BlueprintType)
 struct FSolarSystem : public FTableRowBase
 {
-    GENERATED_BODY()
+   GENERATED_BODY()
 
-public:
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FName id;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FName id;
 
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FText name;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FText name;
 
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FTransform transform;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FTransform transform;
 };
 
 
 UCLASS()
 class SPACETRUCKERS_API ASolarSystemActor : public AActor
 {
-	GENERATED_BODY()
+   GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	ASolarSystemActor();
+   // Sets default values for this actor's properties
+   ASolarSystemActor();
 
-	virtual void Tick(float DeltaTime) override;
+   virtual void Tick(float DeltaTime) override;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+   // Called when the game starts or when spawned
+   virtual void BeginPlay() override;
 
 private:
-	class USolarSystemComponent* solarSystemComponent;
-	class UStaticMeshComponent* meshComponent;
+   class USolarSystemComponent* solarSystemComponent;
+   class UStaticMeshComponent* meshComponent;
 };

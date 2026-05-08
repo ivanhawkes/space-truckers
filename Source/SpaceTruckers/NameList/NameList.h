@@ -6,9 +6,8 @@
 USTRUCT(BlueprintType)
 struct FNameList : public FTableRowBase
 {
-    GENERATED_BODY()
+   GENERATED_BODY()
 
-public:
-    UPROPERTY(EditAnywhere, Category = "Item Data")
-    FText name;
+   UPROPERTY(EditAnywhere, Category = "Item Data")
+   FText name;
 };

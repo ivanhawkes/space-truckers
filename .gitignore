@@ -2,7 +2,14 @@
 node_modules/
 
 # Visual Studio Code
-.vs/
+/.vs
+/.vscode
+
+# JetBrains Rider
+*.DotSettings.user
+
+# JetBrains plugins
+Plugins/*
 
 # Hugo folders
 public/
