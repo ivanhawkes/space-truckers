@@ -1,12 +1,12 @@
 ---
 author: Ivan Hawkes
-date: '2026-06-07'
-description: Requirements Specification
-title: Requirements Specification
+date: '2026-05-07'
+description: Design Specification
+title: Design Specification
 type: specification
 ---
 
-# Requirements Specification
+# Design Specification
 
 Some text.
 

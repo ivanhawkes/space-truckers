@@ -1,12 +1,12 @@
 ---
 author: Ivan Hawkes
-date: '2026-06-07'
-description: Project Plan
-title: Project Plan
+date: '2026-05-07'
+description: Functional Specification
+title: Functional Specification
 type: specification
 ---
 
-# Project Plan
+# Functional Specification
 
 Some text.
 

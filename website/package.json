@@ -1,0 +1,18 @@
+{
+  "name": "space-truckers",
+  "version": "1.0.0",
+  "description": "A space trading game SDK.",
+  "author": "Ivan Hawkes",
+  "workspaces": [
+    "themes/**"
+  ],
+  "scripts": {
+    "build-css": "npx @tailwindcss/cli -i themes/be-best/assets/css/main.css -o public/css/main.css --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "tailwindcss": "^4.3.0"
+  }
+}

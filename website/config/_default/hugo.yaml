@@ -4,6 +4,7 @@ title: Space Truckers
 theme: be-best
 MetaDataFormat: yaml
 DefaultContentLanguage: en
+publishDir: ../docs
 
 # RSS Feed Copyright
 copyright: © 2026 Ivan Hawkes
@@ -15,17 +16,17 @@ params:
 # RSS and HTML outputs based on page kind
 outputs:
   home:
-  - html
-  - rss
+    - html
+    - rss
   section:
-  - html
-  - rss
+    - html
+    - rss
   taxonomy:
-  - html
-  - rss
+    - html
+    - rss
   term:
-  - html
-  - rss
+    - html
+    - rss
 
 # Limit the amount of entries in the RSS feed
 services:
@@ -65,16 +66,16 @@ build:
     - source: 'assets/.*\.(.*)$'
       target: $1
 
-# Alow various utilities to be run when deployed to GitHub Pages
+# Allow various utilities to be run when deployed to GitHub Pages
 security:
   exec:
     allow:
-      - ^(dart-)?sass(-embedded)?$
+      - ^node$
       - ^go$
       - ^npx$
       - ^postcss$
-      - ^tailwindcss
-      - ^asciidoctor$
+      - ^tailwindcss$
+
 module:
   mounts:
     - source: assets

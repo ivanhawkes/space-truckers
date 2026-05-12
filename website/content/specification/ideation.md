@@ -4,14 +4,16 @@ categories:
   - Documentation
   - Concept
   - Idea
-date: '2026-06-07'
+date: '2026-05-07'
 description:
   A document that briefyly describes the goals and intents of this project.
 title: Ideation
 type: specification
 ---
 
-# Ideas for the development of my blog site
+# Space Truckers
+
+Space Truckers is an SDK for Space Trading Games.
 
 ## Purpose
 

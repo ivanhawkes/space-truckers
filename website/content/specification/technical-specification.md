@@ -1,12 +1,12 @@
 ---
 author: Ivan Hawkes
-date: '2026-06-07'
-description: Design Specification
-title: Design Specification
+date: '2026-05-07'
+description: Technical Specification
+title: Technical Specification Copy
 type: specification
 ---
 
-# Design Specification
+# Technical Specification
 
 Some text.
 

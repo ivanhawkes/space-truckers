@@ -1,12 +1,12 @@
 ---
 author: Ivan Hawkes
-date: '2026-06-07'
-description: Functional Specification
-title: Functional Specification
+date: '2026-05-07'
+description: Test Specification
+title: Test Specification
 type: specification
 ---
 
-# Functional Specification
+# Test Specification
 
 Some text.
 

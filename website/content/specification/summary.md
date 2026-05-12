@@ -2,7 +2,7 @@
 author: Ivan Hawkes
 categories:
 - Documentation
-date: '2026-06-07'
+date: '2026-05-07'
 description: Project progress summary
 title: Summary
 type: specification
