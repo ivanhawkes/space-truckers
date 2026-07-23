@@ -29,40 +29,37 @@ Use desaturated primary colours for it.
 
 ## Space
 
-Corruption 
-Economy prototypes
-  Prototype: "my-parent" - recursive 
-
-Planets can have skins
-
-Randomly generate list of items from loot tables for each trader
-Prices take Economy and Corruption into account.
+- Corruption
+- Planets can have skins
+- Randomly generate list of items from loot tables for each trader
+- Prices take Economy and Corruption into account.
 
 ## Black markets
 
 Have some
 
-Need way to associate multiple tables of goods with trader very much like loot tables.
+Need way to associate multiple tables of goods with trader very much like loot
+tables.
 
 Trader has array of tables, which are prototypes with an array of entries.
 
 ## Loot tables
 
-Prototype
-List of goods
-Price random factor
-Pricing factor (discount e,g. Alliance)
-Corruption factor
-Random chance of being in stock each day, generally quite likely but nice to run out at times
-Quantity, baseline - trader has actual quantity and that varies 
+- Prototype
+- List of goods
+- Price random factor
+- Pricing factor (discount e,g. Alliance)
+- Corruption factor
+- Random chance of being in stock each day, generally quite likely but nice to
+  run out at times
+- Quantity, baseline - trader has actual quantity and that varies
 
 ## Trade station events
 
-Space weather
-Famine
-Plaque
-Pestilence 
-Soil depletion
-Etc
+- Space weather
+- Famine
+- Plaque
+- Pestilence
+- Soil depletion
 
-Each has chances of happening and their duration. 
+Each has chances of happening and their duration.

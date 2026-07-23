@@ -6,7 +6,7 @@ categories:
   - Idea
 date: '2026-05-07'
 description:
-  A document that briefyly describes the goals and intents of this project.
+  A document that briefly describes the goals and intents of this project.
 title: Ideation
 type: specification
 ---
@@ -22,7 +22,7 @@ further developed into a project.
 
 ## Logline
 
-Describe in a single sentance the purpose of this project.
+Describe in a single sentence the purpose of this project.
 
 > I wish to create an SDK that can be used for space trading simulations.
 
@@ -76,9 +76,8 @@ the game code a bit.
 
 ## Trade Parameters
 
-You can go fast or you can go cheap, but you can't go both. Fuel burns at the
-start and end of journeys will need to be
-factored into the price of goods.
+You can go fast, or you can go cheap, but you can't do both. Fuel burns at the
+start and end of journeys will need to be factored into the price of goods.
 
 Ships that are unmanned are preferred since this allows them to accelerate for
 long periods at multiples of gravity
@@ -102,7 +101,7 @@ is limited and costly.
 
 ## Tech Tree Advancement
 
-Each community will have it's own level of tech advancement based on it's
+Each community will have its own level of tech advancement based on it's
 resources available,
 population (skills, health, etc), and past achievements.
 
@@ -110,122 +109,130 @@ They will need to trade for materials / tech that can help advance them through
 a tech tree.
 
 NOTE: each period builds on previous periods. Some goods will drop in value at
-the start of
-the next period, others are evergreen and persist for the rest of the tree. By
+the start of the next period, others are evergreen and persist for the rest of
+the tree. By
 default,
 anything they make is also considered available for sale.
 
 Rough plan:
 
-- stone age - good for looters and slavers to set up trade posts
-    - SOCIAL CHANGE
-    - MAKE
+### stone age
+
+    - Discover
         - religion
         - fire
-        - stone tools
-        - rope
-        - charcoal
+    - Social Change
         - domesticated dogs
-        - pottery
-        - pigments
-        - cave painting
+        - slavery
+        - cave art
+    - Make / Invent
+        - charcoal
         - glue
-        - mining
-    - SELL
+        - rope
+        - stone tools
+    - Supply
         - slaves
+        - pigments
+        - pottery
         - natural drugs
         - precursors for biotech weapons i.e. novel viruses
-    - BUY
-        - small amounts of luxury lifestyle goods for the slavers
-        - colonisation goods e.g. habitats
-        - weapons
-        - restraints
-        - alcohol
-        - drugs
-        - sex workers
-- pre-history
-    - SOCIAL CHANGE
-    - MAKE
-        - bread
+        - hides
+        - furs
+
+### pre-history
+
+    - Discover
         - fermentation
+        - agriculture
+        - irrigation
+    - Social Change
+        - mining
+    - Make / Invent
+        - flour
+        - bread
+        - beer
+        - wine
         - domesticated grains
         - domesticated animals
         - mud bricks
         - lime
         - lead
         - ard plough
-        - irrigation
-    - SELL
-    - BUY
-- copper
-    - SOCIAL CHANGE
-    - MAKE
-        - salt mining
+    - Supply
+        - alcohol
+
+### copper age
+
+    - Discover
         - sailing (exploration)
+    - Social Change
+        - salt mining
+    - Make / Invent
         - crucible
         - fired bricks
         - natron
         - plumbing
         - mirrors
-    - SELL
-    - BUY
-- bronze age - much the same as above
-    - SOCIAL CHANGE
-    - MAKE
+    - Supply
+
+### bronze age - much the same as above
+
+    - Discover
         - wheel
-    - SELL
+    - Social Change
+    - Make / Invent
+        - furnace
+        - tin
+        - bronze
+        - brass
+    - Supply
         - metals
         - minerals
         - jewelery
         - cloth / clothing
         - mercenaries
-    - BUY
-        - pen + paper
-        - engineering items - building pyramids / ziggurats
-- iron age
-    - SOCIAL CHANGE
-        - rise of the kings
-    - MAKE
+
+### iron age
+
+    - Discover
         - early farming implements
+    - Social Change
+        - rise of the kings
+    - Make / Invent
         - carts drawn by animals
         - latrines
         - swords
         - writing
-        - tin
-        - bronze
-        - brass
         - vinegar
         - shaduf
-        - paper
-        - pen / quill
-        - papyrus
-        - ink
-    - SELL
+    - Supply
         - harder metals
-    - BUY
-        - advance farming implements
-- classical age
-    - SOCIAL CHANGE
-        - world conquest
-    - MAKE
-        - maths
+
+### classical age
+
+    - Discover
         - alchemy
+        - distillation
+        - maths
+    - Social Change
+        - theatre
+        - world conquest
+    - Make / Invent
         - shipping
         - water clock
         - star charts
         - Antikythera mechanism / analogue computer
         - orary
-        - ceramincs
+        - ceramics
         - mills
         - siege weapons
-        - art / theatre
         - cultural artifacts
         - books
         - pornograhy
         - piston bellows
         - glass
-        - concrete
-        - distillation
+        - cement
+        - stills
         - lathe
         - vitreous enamel
         - screw
@@ -242,20 +249,21 @@ Rough plan:
         - astrolabe
         - soap
         - glass window
-    - SELL
-        - grain
+    - Supply
         - alcohol
-    - BUY
-- medieval
-    - SOCIAL CHANGE
-    - MAKE
+        - grain
+
+### medieval age
+
+    - Discover
+        - gunpowder
+        - soda ash
+        - sulphuric acid
+    - Social Change
+    - Make / Invent
         - heavy machinery
         - fractional distillation
-        - soda ash
         - antimony
-        - gunpowder
-        - compass
-        - sulphuric acid
         - canon
         - rocket
         - aqua regia
@@ -266,16 +274,18 @@ Rough plan:
         - guillotine
         - rifling
         - laudanum
-        - flintlock / black powder gun
-    - SELL
-    - BUY
-- pre-industrial
-    - SOCIAL CHANGE
-    - MAKE
+        - flintlock
+    - Supply
+
+### pre-industrial age
+
+    - Discover
         - physics
+        - calculus
+    - Social Change
+    - Make / Invent
         - mass printed media
         - vacuum pump
-        - calculus
         - nickel
         - hydrogen
         - chlorine
@@ -285,27 +295,33 @@ Rough plan:
         - uranium
         - Leblanc process
         - microscope (when?)
-    - SELL
-    - BUY
-- industrial
-    - SOCIAL CHANGE
+    - Supply
+
+### industrial age
+
+    - Discover
+        - chemistry
+        - electricity
+        - electrolosis
+        - Maxwell's equations
+        - medicine
+        - pasturisation
+        - standard model of physics
+    - Social Change
+        - mass migration from farms to factories
         - job unheaval / change in availability
         - workers rights movements
         - rise of the billionaires
-    - MAKE
+    - Make / Invent
         - steam power
         - internal combustion engine
         - refrigeration
         - factories
         - basic communications
-        - electricity
         - safe lighting and heating
-        - early medicine
-        - chemistry
         - automatic flour mill
         - sewing machine
         - cotton gin
-        - electrolosis
         - jacquard loom
         - morphine
         - potasium
@@ -328,9 +344,7 @@ Rough plan:
         - heroine
         - TNT
         - gattling gun
-        - pasturisation
         - dynamite
-        - Maxwell's equations
         - centrifuge
         - offset printing
         - four stroke engine
@@ -355,7 +369,6 @@ Rough plan:
         - electron
         - cathode ray tube
         - valves
-        - standard model of physics
         - chromatography
         - airplane
         - tank
@@ -364,12 +377,14 @@ Rough plan:
         - microphones
         - LED
         - magnetic tape
-    - SELL
-    - BUY
-- post-industrial
-    - SOCIAL CHANGE
+    - Supply
+
+### post-industrial age
+
+    - Discover
+    - Social Change
         - more leisure time
-    - MAKE
+    - Make / Invent
         - television
         - Turing machine
         - scanning electron microscope
@@ -401,10 +416,12 @@ Rough plan:
         - radar
         - nuclear weapons
         - nuclear power
-    - SELL
-    - BUY
-- information age
-    - SOCIAL CHANGE
+    - Supply
+
+### information age
+
+    - Discover
+    - Social Change
         - social and political schism / division
         - world wide exchange of ideas
         - post truth
@@ -413,7 +430,7 @@ Rough plan:
         - troll farms
         - quantum computing
         - particle accelerator
-    - MAKE
+    - Make / Invent
         - computers
         - computer games
         - design tools e.g. CAD
@@ -423,48 +440,54 @@ Rough plan:
         - CAT scan
         - MRI
         - Simulation software
-    - SELL
-    - BUY
-- AI age
-    - SOCIAL CHANGE
+    - Supply
+
+### AI age
+
+    - Discover
+    - Social Change
         - mass unemployment
         - widespread poverty
         - social unrest
         - the singularity
         - faster pace of development
-    - MAKE
+    - Make / Invent
         - AI slop
-    - SELL
-    - BUY
-- space age
-    - SOCIAL CHANGE
-    - MAKE
+    - Supply
+
+### space age
+
+    - Discover
+    - Social Change
+    - Make / Invent
         - satelites
         - space station
         - moonshot
         - marsshot
         - space tourism
-    - SELL
-    - BUY
-- space colonisation
-    - SOCIAL CHANGE
+    - Supply
+
+### space colonisation age
+
+    - Discover
+    - Social Change
         - disapora
         - terraforming
-    - MAKE
+    - Make / Invent
         - space shipping
         - asteroid mining
         - ice "mining" in the ice belt
         - terraforming equipment
-    - SELL
-    - BUY
-- sublimation
-    - SOCIAL CHANGE
+    - Supply
+
+### sublimation
+
+    - Discover
+    - Social Change
         - we're done with this material world of illusions
-    - MAKE
+    - Make / Invent
         - nothing
-    - SELL
-        - nothing
-    - BUY
+    - Supply
         - nothing
 
 By tailoring the markets to their current needs it can make it more interesting
@@ -477,18 +500,18 @@ direct line forward.
 
 # Major Categories of Advancement
 
-- agriculture
-- industry
-- commerce
-- chemistry
-- math
-- physics
-- arts
-- culture
-- literature
-- computing
-- communications
-- information
+    - agriculture
+  - industry
+  - commerce
+  - chemistry
+  - math
+  - physics
+  - arts
+  - culture
+  - literature
+  - computing
+  - communications
+  - information
 
 ## Stock Exchange
 
@@ -500,6 +523,29 @@ guilds of players or groups to have server level infrastructure.
 
 Game server is responsible to write transactions. Client is allowed read
 transactions.
+
+## Conversations
+
+Should we be able to talk over a CB style interface when at truck stops or
+popular routes?
+
+Good way to impart some lore or exposition on a planetary system.
+
+Should have their own creole.
+
+## Miscellaneous
+
+Corruption Index: 0 - 100
+
+With zero being complete corruption and 100 being none. There is a 
+real-world version of this which might help to categorise trade stations and 
+planets.
+
+Shipping costs:
+
+Calculated using the volume expressed in cubic metres, and the item's 
+density. This might become an approximate for things that are not simple 
+like liquids and powders e.g. toys, weapons.
 
 ## References
 
