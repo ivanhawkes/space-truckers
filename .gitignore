@@ -95,3 +95,6 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Prevent the generated data files from being tracked. We only need the originals.
+Content/Data/generated/
