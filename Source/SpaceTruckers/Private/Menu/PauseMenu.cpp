@@ -1,5 +1,4 @@
-﻿// 
-#include "SpaceTruckers/Public/Menu/PauseMenu.h"
+﻿#include "SpaceTruckers/Public/Menu/PauseMenu.h"
 
 
 void UPauseMenu::OnResumeGame()

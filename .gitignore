@@ -15,8 +15,8 @@ node_modules/
 Plugins/*
 
 # Hugo folders
-public/
-resources/
+/website/public/
+/website/resources/
 .hugo_build.lock
 hugo_stats.json
 

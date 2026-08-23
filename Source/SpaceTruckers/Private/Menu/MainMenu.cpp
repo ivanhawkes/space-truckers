@@ -3,6 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 
+
 void UMainMenu::OnStartGame()
 {
 	// Hide menu
@@ -11,6 +12,7 @@ void UMainMenu::OnStartGame()
 	// Start game
 	UGameplayStatics::OpenLevel(GetWorld(), "Test 01");
 }
+
 
 void UMainMenu::OnQuitGame() const
 {

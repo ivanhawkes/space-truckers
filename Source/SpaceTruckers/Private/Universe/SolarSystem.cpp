@@ -2,30 +2,33 @@
 #include "Components/StaticMeshComponent.h"
 
 
-// Sets default values
 ASolarSystemActor::ASolarSystemActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create a mesh and make it the root of our actor.
-	meshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"), false);
-	RootComponent = meshComponent;
+	sunMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"), false);
+	RootComponent = sunMeshComponent;
 
+	// NOTE: We don't have any of the saved parameters yet. Don't set anything until those
+	// are restored.
+	
 	// Set the mesh.
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 	UStaticMesh* Asset = MeshAsset.Object;
-	meshComponent->SetStaticMesh(Asset);
+	sunMeshComponent->SetStaticMesh(Asset);
 }
 
 
-// Called when the game starts or when spawned
 void ASolarSystemActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// We can apply the scale now.
+	sunMeshComponent->SetRelativeScale3D(sunScale);
 }
 
 
-// Called every frame
 void ASolarSystemActor::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);

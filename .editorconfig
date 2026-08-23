@@ -50,17 +50,17 @@ cpp_naming_symbols.all_symbols.applicable_kinds            = *
 
 # Naming convention styles
 
-cpp_naming_style.unreal_engine_default.capitalization      = pascal_case
+cpp_naming_style.unreal_engine_default.capitalization      = camelCase
 cpp_naming_style.unreal_engine_default.required_prefix     =
 cpp_naming_style.unreal_engine_default.required_suffix     =
 cpp_naming_style.unreal_engine_default.word_separator      =
 
-cpp_naming_style.unreal_engine_enums.capitalization        = pascal_case
+cpp_naming_style.unreal_engine_enums.capitalization        = camelCase
 cpp_naming_style.unreal_engine_enums.required_prefix       = E
 cpp_naming_style.unreal_engine_enums.required_suffix       =
 cpp_naming_style.unreal_engine_enums.word_separator        =
 
-cpp_naming_style.unreal_engine_templates.capitalization    = pascal_case
+cpp_naming_style.unreal_engine_templates.capitalization    = camelCase
 cpp_naming_style.unreal_engine_templates.required_prefix   = T
 cpp_naming_style.unreal_engine_templates.required_suffix   =
 cpp_naming_style.unreal_engine_templates.word_separator    =
@@ -80,12 +80,19 @@ cpp_naming_style.aactor_style.required_prefix              = A
 cpp_naming_style.aactor_style.required_suffix              =
 cpp_naming_style.aactor_style.word_separator               =
 
-cpp_naming_style.swidget_style.capitalization              = pascal_case
+cpp_naming_style.swidget_style.capitalization              = camelCase
 cpp_naming_style.swidget_style.required_prefix             = S
 cpp_naming_style.swidget_style.required_suffix             =
 cpp_naming_style.swidget_style.word_separator              =
 
-cpp_naming_style.boolean_style.capitalization              = pascal_case
+cpp_naming_style.boolean_style.capitalization              = camelCase
 cpp_naming_style.boolean_style.required_prefix             = b
 cpp_naming_style.boolean_style.required_suffix             =
 cpp_naming_style.boolean_style.word_separator              =
+
+# Resharper - for renaming cut and paste code
+resharper_cpp_naming_rule_local_variable_style = camelCase
+resharper_cpp_naming_rule_local_variable_prefix =
+
+resharper_cpp_naming_rule_private_instance_field_style = camelCase
+resharper_cpp_naming_rule_private_instance_field_prefix =
