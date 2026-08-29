@@ -139,6 +139,13 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 	double rotationDegree{0.0f};
 	double expansionOutward{0.0f};
 
+	// Give the entire universe a spin direction.
+	double galacticAxialRotation = RandomStream.FRandRange(-1.0f, 1.0f);
+	if (galacticAxialRotation <= 0)
+		galacticAxialRotation = -1.0f;
+	else
+		galacticAxialRotation = 1.0f;
+
 	// Generate a set of solar systems.
 	for (int i = 0; i < universeParameters.numberOfSolarSystems; i++)
 	{
@@ -146,6 +153,8 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 		double randomOutward{0.0f};
 		randomOutward = RandomStream.FRandRange(-solarSystemOrbit.randomExpansionOutward,
 		                                        solarSystemOrbit.randomExpansionOutward);
+
+		// The random rotation is an offset from the fixed rotation.  
 		double randomRotation{0.0f};
 		randomRotation = RandomStream.FRandRange(-solarSystemOrbit.randomRotationDegree,
 		                                         solarSystemOrbit.randomRotationDegree);
@@ -156,7 +165,7 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 		const double yaw = RandomStream.FRandRange(0, 30.0);
 		const double roll = RandomStream.FRandRange(0, 30.0);
 		FRotator spawnRotation = FRotator(pitch, yaw, roll);
-		
+
 		// Give the new solar system an offset from the universe.
 		const double distance = solarSystemOrbit.deadZone + expansionOutward + randomOutward;
 		const double x = sin((rotationDegree + randomRotation) * Universe::toRadians) * distance;
@@ -166,7 +175,7 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 
 		// Update the rotation and expansion outwards.
 		expansionOutward += solarSystemOrbit.fixedExpansionOutward;
-		rotationDegree += solarSystemOrbit.fixedRotationDegree;
+		rotationDegree += solarSystemOrbit.fixedRotationDegree * galacticAxialRotation;
 
 		auto& row = SolarSystemNameList[i];
 
@@ -185,7 +194,7 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 
 		// Set the name for this actor.
 		actor->solarSystemName = row.ToString();
-		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+		actor->axialRotation = RandomStream.FRandRange(-0.05f, 0.05f);
 
 		// Need to cast to the interface to access the callback.
 		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
@@ -215,15 +224,20 @@ void UGameInstanceSpaceTrucker::CreatePlanets(UWorld* NewWorld, FRandomStream Ra
 	                                                     universeParameters.maxNumberOfPlanets);
 	for (int i = 0; i < numberOfPlanets; i++)
 	{
+		double coinToss = RandomStream.FRandRange(0.0f, 1.0f);
+		double flipSpin {1.0f};
+		if (coinToss < 0.2f)
+			flipSpin = -1.0f;
+
 		// Calculate some random offsets. Allowing the offset to be positive or negative.
 		double randomOutward{0.0f};
 		randomOutward = RandomStream.FRandRange(-planetOrbit.randomExpansionOutward,
 		                                        planetOrbit.randomExpansionOutward);
 		const double randomRotation{
 			RandomStream.FRandRange(-180.0f,
-									180.0f)
+			                        180.0f)
 		};
-		
+
 		// Centre of the universe is based on the universe actor location.
 		FVector spawnLocation = OrbitParent->GetActorLocation();
 		const double pitch = RandomStream.FRandRange(0, 30.0);
@@ -261,7 +275,9 @@ void UGameInstanceSpaceTrucker::CreatePlanets(UWorld* NewWorld, FRandomStream Ra
 		actor->orbitParent = OrbitParent;
 		actor->orbitRotation = randomRotation;
 		actor->orbitRadius = distance;
-		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+
+		// TODO: The spin velocity limits need to be configurable.
+		actor->axialRotation = RandomStream.FRandRange(0.001f, 0.05f) * OrbitParent->SpinDirection() * flipSpin;
 
 		// Need to cast to the interface to access the callback.
 		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
@@ -298,7 +314,7 @@ void UGameInstanceSpaceTrucker::CreateSatellites(UWorld* NewWorld, FRandomStream
 		                                        satelliteOrbit.randomExpansionOutward);
 		const double randomRotation{
 			RandomStream.FRandRange(-180.0f,
-									180.0f)
+			                        180.0f)
 		};
 
 		// Centre of the universe is based on the universe actor location.
@@ -341,7 +357,9 @@ void UGameInstanceSpaceTrucker::CreateSatellites(UWorld* NewWorld, FRandomStream
 		actor->orbitParent = OrbitParent;
 		actor->orbitRotation = randomRotation;
 		actor->orbitRadius = distance;
-		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+
+		// TODO: The spin velocity limits need to be configurable.
+		actor->axialRotation = RandomStream.FRandRange(0.001f, 0.05f) * OrbitParent->orbitParent->SpinDirection();
 
 		// Need to cast to the interface to access the callback.
 		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))

@@ -52,6 +52,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Orbit")
 	double GetGravity();
 	
+	/** Returns an indication of whether the axial spin is clockwise or counterclockwise. */
+	UFUNCTION(BlueprintCallable, Category = "Orbit")
+	double IsClockwise() const;
+	
+	/** Returns 1.0 for anti-clockwise, and -1.0 for clockwise. */
+	UFUNCTION(BlueprintCallable, Category = "Orbit")
+	double SpinDirection() const;
+	
 	// Called right after spawning each dynamic actor for a new game.
 	virtual void OnPostInitialSpawn() override;
 	
