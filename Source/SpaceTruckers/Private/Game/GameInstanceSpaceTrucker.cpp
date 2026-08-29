@@ -1,15 +1,21 @@
 #include "Game/GameInstanceSpaceTrucker.h"
 #include "Engine/World.h"
 #include "Engine/GameInstance.h"
-#include "GameFramework/Actor.h"
+#include "EngineUtils.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "SaveGame/SaveGameSpaceTrucker.h"
-#include "Serialization/MemoryReader.h"
-#include "Serialization/MemoryWriter.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
-#include "SpaceTruckers/Public/Universe/SolarSystem.h"
+#include "Universe/SolarSystem.h"
+#include "Universe/Planet.h"
+#include "Universe/Satellite.h"
+#include "Universe/Universe.h"
+
+
+UGameInstanceSpaceTrucker::UGameInstanceSpaceTrucker()
+{
+}
 
 
 void UGameInstanceSpaceTrucker::Init()
@@ -30,28 +36,73 @@ void UGameInstanceSpaceTrucker::Shutdown()
 }
 
 
-void UGameInstanceSpaceTrucker::OnWorldInitialized(UWorld* newWorld, const UWorld::InitializationValues IVS)
+void UGameInstanceSpaceTrucker::Tick(float DeltaTime)
 {
-	if (!newWorld)
+	// Ensure we don't tick inside CDO (Class Default Object)
+	if (HasAnyFlags(RF_ClassDefaultObject)) return;
+
+	gameplaySeconds += DeltaTime * timeMultiplier;
+}
+
+
+ETickableTickType UGameInstanceSpaceTrucker::GetTickableTickType() const
+{
+	// Avoid ticking the Class Default Object.
+	return HasAnyFlags(RF_ClassDefaultObject) ? ETickableTickType::Never : ETickableTickType::Always;
+}
+
+
+bool UGameInstanceSpaceTrucker::IsTickable() const
+{
+	// Returns true if the object is fully initialised and allowed to tick.
+	return !HasAnyFlags(RF_ClassDefaultObject);
+}
+
+
+TStatId UGameInstanceSpaceTrucker::GetStatId() const
+{
+	RETURN_QUICK_DECLARE_CYCLE_STAT(UMyGameInstance, STATGROUP_Tickables);
+}
+
+
+void UGameInstanceSpaceTrucker::LoadUniverse()
+{
+	if (shouldLoadUniverse)
+	{
+		// Ensure the save file exists.
+		if (!UGameplayStatics::DoesSaveGameExist(slotName, 0)) return;
+
+		// Load the data and cast it.
+		if (USaveGameSpaceTrucker* saveGame = Cast<USaveGameSpaceTrucker>(
+			UGameplayStatics::LoadGameFromSlot(slotName, 0)))
+		{
+			// Retrieve all the useful information we saved.
+			gameplaySeconds = saveGame->gameplaySeconds;
+			timeMultiplier = saveGame->timeMultiplier;
+
+			LoadDynamicActors(saveGame);
+		}
+	}
+
+	shouldLoadUniverse = false;
+}
+
+
+void UGameInstanceSpaceTrucker::OnWorldInitialized(UWorld* NewWorld, const UWorld::InitializationValues IVS)
+{
+	if (!NewWorld)
 		return;
 
 	// Filter out non-game worlds (Editor, Preview Windows, etc.)
-	if (newWorld->WorldType == EWorldType::Game || newWorld->WorldType == EWorldType::PIE)
+	if (NewWorld->WorldType == EWorldType::Game || NewWorld->WorldType == EWorldType::PIE)
 	{
-		// Retrieve the map name to perform level-specific logic
-		FString LevelName = newWorld->GetMapName();
-
-		UE_LOG(LogTemp, Log, TEXT("Game Instance detected BeginPlay for level: %s"), *LevelName);
-
-		// There should only be one universe actor in a level so we can just ask for it.
+		// Only generate the universe if the flag is set. Only do it once.
 		if (shouldGenerate)
-			GenerateNewUniverse(newWorld);
+			GenerateNewUniverse(NewWorld);
 		shouldGenerate = false;
 
 		// Dynamic actors must be explicitly loaded.
-		if (shouldLoadUniverse)
-			LoadDynamicActors();
-		shouldLoadUniverse = false;
+		LoadUniverse();
 	}
 }
 
@@ -75,14 +126,239 @@ void UGameInstanceSpaceTrucker::NewLevelFromTemplate(
 
 	// Indicate the solar system needs to be generated now.
 	shouldGenerate = true;
+
+	// Reset the gameplay clock.
+	gameplaySeconds = 0.0f;
 }
 
 
-void UGameInstanceSpaceTrucker::GenerateNewUniverse(UWorld* newWorld)
+void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStream RandomStream,
+                                                   const TArray<FName>& SolarSystemNameList,
+                                                   const TArray<FName>& PlanetNameList)
 {
-	constexpr double pi{3.14159265358979323846};
-	constexpr double toRadians{pi / 180.0f};
+	double rotationDegree{0.0f};
+	double expansionOutward{0.0f};
 
+	// Generate a set of solar systems.
+	for (int i = 0; i < universeParameters.numberOfSolarSystems; i++)
+	{
+		// Calculate some random offsets. Allowing the offset to be positive or negative.
+		double randomOutward{0.0f};
+		randomOutward = RandomStream.FRandRange(-solarSystemOrbit.randomExpansionOutward,
+		                                        solarSystemOrbit.randomExpansionOutward);
+		double randomRotation{0.0f};
+		randomRotation = RandomStream.FRandRange(-solarSystemOrbit.randomRotationDegree,
+		                                         solarSystemOrbit.randomRotationDegree);
+
+		// Centre of the universe is based on the universe actor location.
+		FVector spawnLocation = FVector(0.0f, 0.0f, 0.0f);
+		const double pitch = RandomStream.FRandRange(0, 30.0);
+		const double yaw = RandomStream.FRandRange(0, 30.0);
+		const double roll = RandomStream.FRandRange(0, 30.0);
+		FRotator spawnRotation = FRotator(pitch, yaw, roll);
+		
+		// Give the new solar system an offset from the universe.
+		const double distance = solarSystemOrbit.deadZone + expansionOutward + randomOutward;
+		const double x = sin((rotationDegree + randomRotation) * Universe::toRadians) * distance;
+		const double y = cos((rotationDegree + randomRotation) * Universe::toRadians) * distance;
+		spawnLocation.X += x;
+		spawnLocation.Y += y;
+
+		// Update the rotation and expansion outwards.
+		expansionOutward += solarSystemOrbit.fixedExpansionOutward;
+		rotationDegree += solarSystemOrbit.fixedRotationDegree;
+
+		auto& row = SolarSystemNameList[i];
+
+		FActorSpawnParameters spawnParameters;
+		spawnParameters.Name = row;
+		spawnParameters.bHideFromSceneOutliner = false;
+		spawnParameters.ObjectFlags |= RF_Transient;
+		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		auto actor = NewWorld->SpawnActor<ASolarSystemActor>(bpSolarSystem,
+		                                                     spawnLocation, spawnRotation, spawnParameters);
+
+		// Tag the actor in case we need to find it later.
+		actor->Tags.Add(FName("DynamicSpawn"));
+
+		// Set the name for this actor.
+		actor->solarSystemName = row.ToString();
+		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+
+		// Need to cast to the interface to access the callback.
+		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
+		{
+			iSave->OnPostInitialSpawn();
+		}
+
+#if WITH_EDITOR
+		// Set a label for the outliner and make our new actor a child of the universe.
+		actor->SetActorLabel(row.ToString());
+#endif
+
+		// Let's make some planets.
+		CreatePlanets(NewWorld, RandomStream, actor, PlanetNameList);
+	}
+}
+
+
+void UGameInstanceSpaceTrucker::CreatePlanets(UWorld* NewWorld, FRandomStream RandomStream,
+                                              const TObjectPtr<ASolarSystemActor> OrbitParent,
+                                              const TArray<FName>& PlanetNameList)
+{
+	double expansionOutward{0.0f};
+
+	// Generate a set of planets.
+	const int32 numberOfPlanets = RandomStream.RandRange(universeParameters.minNumberOfPlanets,
+	                                                     universeParameters.maxNumberOfPlanets);
+	for (int i = 0; i < numberOfPlanets; i++)
+	{
+		// Calculate some random offsets. Allowing the offset to be positive or negative.
+		double randomOutward{0.0f};
+		randomOutward = RandomStream.FRandRange(-planetOrbit.randomExpansionOutward,
+		                                        planetOrbit.randomExpansionOutward);
+		const double randomRotation{
+			RandomStream.FRandRange(-180.0f,
+									180.0f)
+		};
+		
+		// Centre of the universe is based on the universe actor location.
+		FVector spawnLocation = OrbitParent->GetActorLocation();
+		const double pitch = RandomStream.FRandRange(0, 30.0);
+		const double yaw = RandomStream.FRandRange(0, 30.0);
+		const double roll = RandomStream.FRandRange(0, 30.0);
+		FRotator spawnRotation = FRotator(pitch, yaw, roll);
+
+		// Give the new solar system an offset from the sun.
+		const double distance = planetOrbit.deadZone + expansionOutward + randomOutward;
+		const double x = sin((randomRotation) * Universe::toRadians) * distance;
+		const double y = cos((randomRotation) * Universe::toRadians) * distance;
+		spawnLocation.X += x;
+		spawnLocation.Y += y;
+
+		// Update the rotation and expansion outwards.
+		expansionOutward += planetOrbit.fixedExpansionOutward;
+
+		auto& row = PlanetNameList[++planetNameIndex];
+
+		FActorSpawnParameters spawnParameters;
+		spawnParameters.Name = row;
+		spawnParameters.bHideFromSceneOutliner = false;
+		spawnParameters.ObjectFlags |= RF_Transient;
+		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		auto actor = NewWorld->SpawnActor<APlanetActor>(bpPlanet,
+		                                                spawnLocation, spawnRotation, spawnParameters);
+
+		// Tag the actor in case we need to find it later.
+		actor->Tags.Add(FName("DynamicSpawn"));
+
+		// Set the members.
+		actor->planetName = row.ToString();
+		actor->orbitParent = OrbitParent;
+		actor->orbitRotation = randomRotation;
+		actor->orbitRadius = distance;
+		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+
+		// Need to cast to the interface to access the callback.
+		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
+		{
+			iSave->OnPostInitialSpawn();
+		}
+
+#if WITH_EDITOR
+		// Set a label for the outliner and make our new actor a child of the universe.
+		actor->SetActorLabel(row.ToString());
+#endif
+
+		// Let's make some satellites.
+		CreateSatellites(NewWorld, RandomStream, actor, PlanetNameList);
+	}
+}
+
+
+void UGameInstanceSpaceTrucker::CreateSatellites(UWorld* NewWorld, FRandomStream RandomStream,
+                                                 const TObjectPtr<APlanetActor> OrbitParent,
+                                                 const TArray<FName>& PlanetNameList)
+{
+	double rotationDegree{0.0f};
+	double expansionOutward{0.0f};
+
+	// Generate a set of planets.
+	const int32 numberOfPlanets = RandomStream.RandRange(universeParameters.minNumberOfSatellites,
+	                                                     universeParameters.maxNumberOfSatellites);
+	for (int i = 0; i < numberOfPlanets; i++)
+	{
+		// Calculate some random offsets. Allowing the offset to be positive or negative.
+		double randomOutward{0.0f};
+		randomOutward = RandomStream.FRandRange(-satelliteOrbit.randomExpansionOutward,
+		                                        satelliteOrbit.randomExpansionOutward);
+		const double randomRotation{
+			RandomStream.FRandRange(-180.0f,
+									180.0f)
+		};
+
+		// Centre of the universe is based on the universe actor location.
+		FVector spawnLocation = OrbitParent->GetActorLocation();
+		const double pitch = RandomStream.FRandRange(0, 30.0);
+		const double yaw = RandomStream.FRandRange(0, 30.0);
+		const double roll = RandomStream.FRandRange(0, 30.0);
+		FRotator spawnRotation = FRotator(pitch, yaw, roll);
+
+		// Give the new solar system an offset from the sun.
+		const double distance = satelliteOrbit.deadZone + expansionOutward + randomOutward;
+		const double x = sin((rotationDegree + randomRotation) * Universe::toRadians) * distance;
+		const double y = cos((rotationDegree + randomRotation) * Universe::toRadians) * distance;
+		spawnLocation.X += x;
+		spawnLocation.Y += y;
+
+		// Update the rotation and expansion outwards.
+		expansionOutward += satelliteOrbit.fixedExpansionOutward;
+		rotationDegree += satelliteOrbit.fixedRotationDegree;
+
+		// TODO: Make a set of names just for satellites.
+		auto& row = PlanetNameList[++satelliteNameIndex];
+		const FName satelliteName = FName(OrbitParent->planetName + "-" + row.ToString());
+
+		FActorSpawnParameters spawnParameters;
+		spawnParameters.Name = satelliteName;
+		spawnParameters.bHideFromSceneOutliner = false;
+		spawnParameters.ObjectFlags |= RF_Transient;
+		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		auto actor = NewWorld->SpawnActor<ASatelliteActor>(bpSatellite,
+		                                                   spawnLocation, spawnRotation, spawnParameters);
+
+		// Tag the actor in case we need to find it later.
+		actor->Tags.Add(FName("DynamicSpawn"));
+
+		// Set the members.
+		actor->satelliteName = satelliteName.ToString();
+		actor->orbitParent = OrbitParent;
+		actor->orbitRotation = randomRotation;
+		actor->orbitRadius = distance;
+		actor->axialRotation = RandomStream.FRandRange(-0.01f,0.05f);
+
+		// Need to cast to the interface to access the callback.
+		if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
+		{
+			iSave->OnPostInitialSpawn();
+		}
+
+#if WITH_EDITOR
+		// Set a label for the outliner and make our new actor a child of the universe.
+		actor->SetActorLabel(row.ToString());
+#endif
+	}
+}
+
+
+void UGameInstanceSpaceTrucker::GenerateNewUniverse(UWorld* NewWorld)
+{
 	// Apply the seed for the randomness of this universe using the Unix
 	// timestamp as a seed.
 	FRandomStream randomStream;
@@ -95,81 +371,33 @@ void UGameInstanceSpaceTrucker::GenerateNewUniverse(UWorld* newWorld)
 		                                 })
 	                                 , true);
 
-	if (universeParameters.solarSystemNames)
+	// Make sure we have a list of names which are suitable for solar systems.
+	if (universeParameters.solarSystemNames && universeParameters.planetNames)
 	{
-		static const FString ContextString(TEXT("Finding Row in solar system table"));
-
-		TArray<FName> rows = universeParameters.solarSystemNames->GetRowNames();
+		TArray<FName> solarSystemNameList = universeParameters.solarSystemNames->GetRowNames();
 
 		// Randomise the array by swapping elements multiple times. This is probably not
 		// very optimal, but it will do for now.
-		for (int i = 0; i < rows.Max() * 3; i++)
+		for (int i = 0; i < solarSystemNameList.Max() * 3; i++)
 		{
-			const int32 firstRow = randomStream.RandRange(0, rows.Max() - 1);
-			const int32 secondRow = randomStream.RandRange(0, rows.Max() - 1);
-			std::swap(rows[firstRow], rows[secondRow]);
+			const int32 firstRow = randomStream.RandRange(0, solarSystemNameList.Max() - 1);
+			const int32 secondRow = randomStream.RandRange(0, solarSystemNameList.Max() - 1);
+			std::swap(solarSystemNameList[firstRow], solarSystemNameList[secondRow]);
 		}
 
-		float rotationDegree{0.0f};
-		float expansionOutward{0.0f};
+		TArray<FName> planetNameList = universeParameters.planetNames->GetRowNames();
 
-		// Generate a set of solar systems.
-		for (int i = 0; i < 200; i++)
+		// Randomise the array by swapping elements multiple times. This is probably not
+		// very optimal, but it will do for now.
+		for (int i = 0; i < planetNameList.Max() * 3; i++)
 		{
-			// Calculate some random offsets. Allowing the offset to be positive or negative.
-			float randomOutward{0.0f};
-			if (universeParameters.randomExpansionOutward > 0.0f)
-			{
-				randomOutward = randomStream.FRandRange(-universeParameters.randomExpansionOutward,
-				                                        universeParameters.randomExpansionOutward);
-			}
-			float randomRotation{0.0f};
-			if (universeParameters.randomRotationDegree > 0.0f)
-			{
-				randomRotation = randomStream.FRandRange(-universeParameters.randomRotationDegree,
-				                                         universeParameters.randomRotationDegree);
-			}
-
-			// Centre of the universe is based on the universe actor location.
-			FVector SpawnLocation = FVector(0.0f, 0.0f, 0.0f);
-			FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f);
-
-			// Give the new solar system an offset from the universe.
-			const float distance = universeParameters.deadZone + expansionOutward + randomOutward;
-			const float x = sin((rotationDegree + randomRotation) * toRadians) * distance;
-			const float y = cos((rotationDegree + randomRotation) * toRadians) * distance;
-			SpawnLocation.X += x;
-			SpawnLocation.Y += y;
-
-			// Update the rotation and expansion outwards.
-			expansionOutward += universeParameters.fixedExpansionOutward;
-			rotationDegree += universeParameters.fixedRotationDegree;
-
-			auto& row = rows[i];
-
-			FActorSpawnParameters spawnParameters;
-			spawnParameters.Name = row;
-			spawnParameters.bHideFromSceneOutliner = false;
-			spawnParameters.ObjectFlags |= RF_Transient;
-			spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
-			ASolarSystemActor* solarSystemActor = newWorld->SpawnActor<ASolarSystemActor>(
-				SpawnLocation, SpawnRotation, spawnParameters);
-
-			// Set the name for this actor.
-			solarSystemActor->solarSystemName = row.ToString();
-
-			// Scale the suns by 0.1 to 50.0.
-			const float scale = static_cast<float>(randomStream.RandRange(1, 50)) / 10.0f;
-			solarSystemActor->sunScale = FVector(scale, scale, scale);
-
-			// Keep a reference to the actors.
-			solarSystemShadowList.Add(solarSystemActor);
-
-#if WITH_EDITOR
-			// Set a label for the outliner and make our new actor a child of the universe.
-			solarSystemActor->SetActorLabel(row.ToString());
-#endif
+			const int32 firstRow = randomStream.RandRange(0, planetNameList.Max() - 1);
+			const int32 secondRow = randomStream.RandRange(0, planetNameList.Max() - 1);
+			std::swap(planetNameList[firstRow], planetNameList[secondRow]);
 		}
+
+		// Create a set of solar system actors.
+		CreateSolarSystems(NewWorld, randomStream, solarSystemNameList, planetNameList);
 	}
 }
 
@@ -182,6 +410,10 @@ void UGameInstanceSpaceTrucker::SaveLevelAndPlayerState(FString SlotName)
 
 	// HACK: Need a way to set this properly.
 	saveGame->lastMapName = "L_TemplateEmpty";
+
+	// Handle any useful game instance data.
+	saveGame->gameplaySeconds = gameplaySeconds;
+	saveGame->timeMultiplier = timeMultiplier;
 
 	// Get the player location.
 	if (ACharacter* PlayerChar = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
@@ -200,94 +432,171 @@ void UGameInstanceSpaceTrucker::SaveLevelAndPlayerState(FString SlotName)
 void UGameInstanceSpaceTrucker::LoadLevelAndPlayerState(FString SlotName)
 {
 	// Open the saved map.
+	// HACK: TODO: We need to get this from anyone other than a hard-coded value.
 	UGameplayStatics::OpenLevel(GetWorld(), FName("L_TemplateEmpty"));
 
 	// Indicate we need to load the universe saved data.
 	shouldLoadUniverse = true;
+	slotName = SlotName;
 }
 
 
 void UGameInstanceSpaceTrucker::ClearCurrentDynamicActors()
 {
+	if (!GetWorld()) return;
+
+	TArray<AActor*> deleteList;
+	for (TActorIterator<AActor> it(GetWorld()); it; ++it)
+	{
+		if (it->ActorHasTag(FName("DynamicSpawn")))
+		{
+			deleteList.Add(*it);
+		}
+	}
+
 	// Delete all the actors in the list.
-	for (const auto actor : solarSystemShadowList)
+	for (const auto actor : deleteList)
 	{
 		if (actor)
 			actor->Destroy();
 	}
-
-	solarSystemShadowList.Empty();
-}
-
-
-void UGameInstanceSpaceTrucker::SaveActor(USaveGameSpaceTrucker* saveGame, const TObjectPtr<AActor> actor)
-{
-	FActorSaveData actorData;
-	actorData.actorClass = actor->GetClass();
-	actorData.transform = actor->GetActorTransform();
-	actorData.name = actor->GetName();
-
-	// Serialise variables flagged with 'SaveGame'
-	FMemoryWriter MemoryWriter(actorData.serializedData);
-	FObjectAndNameAsStringProxyArchive archive(MemoryWriter, true);
-	archive.ArIsSaveGame = true;
-	actor->Serialize(archive);
-
-	// Add them to the list.
-	saveGame->SavedDynamicActors.Add(actorData);
 }
 
 
 void UGameInstanceSpaceTrucker::SaveDynamicActors(USaveGameSpaceTrucker* saveGame)
 {
-	// Save all the actors in the list.
-	for (const auto actor : solarSystemShadowList)
+	// Save all the actors that have our tag.
+	for (TActorIterator<AActor> it(GetWorld()); it; ++it)
 	{
-		if (actor)
-			SaveActor(saveGame, actor);
+		auto actor = *it;
+
+		if (actor->ActorHasTag(FName("DynamicSpawn")))
+		{
+			// Need to cast to the interface to access the callback.
+			if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
+			{
+				FActorSaveData saveData;
+				iSave->OnPreSave(saveData);
+
+				// Push the saved actor data onto the save game instance.
+				saveGame->savedDynamicActors.Add(saveData);
+
+				// Save the components as well.
+				SaveActorComponents(actor, saveData);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Saving dynamic actor without ISavableActorInterface"));
+			}
+		}
 	}
 }
 
 
-void UGameInstanceSpaceTrucker::LoadDynamicActors()
+void UGameInstanceSpaceTrucker::SaveActorComponents(AActor* TargetActor, FActorSaveData& SaveData)
+{
+	// Fetch all components attached to the Actor
+	TInlineComponentArray<UActorComponent*> Components(TargetActor);
+	for (UActorComponent* component : Components)
+	{
+		// Ignore default compiler components (only process dynamically spawned ones)
+		if (!component || component->IsCreatedByConstructionScript() || component->HasAnyFlags(RF_DefaultSubObject))
+		{
+			continue;
+		}
+
+		FComponentSaveData componentSaveData;
+		componentSaveData.componentClass = component->GetClass();
+		componentSaveData.name = FName(component->GetName());
+
+		// Set up the memory writers for binary serialization
+		FMemoryWriter MemoryWriter(componentSaveData.serializedData);
+		FObjectAndNameAsStringProxyArchive Archive(MemoryWriter, false);
+		Archive.ArIsSaveGame = true; // Targets properties marked UPROPERTY(SaveGame)
+
+		// Serialize variables flagged with UPROPERTY(SaveGame) inside the component
+		component->Serialize(Archive);
+
+		SaveData.dynamicComponents.Add(componentSaveData);
+	}
+}
+
+
+void UGameInstanceSpaceTrucker::LoadDynamicActors(USaveGameSpaceTrucker* saveGame)
 {
 	// Remove the current dynamic actors to prevent duplication.
 	ClearCurrentDynamicActors();
 
-	// Ensure the save file exists.
-	if (!UGameplayStatics::DoesSaveGameExist("Save01", 0)) return;
-
-	// Load the data and cast it.
-	if (USaveGameSpaceTrucker* saveGame = Cast<USaveGameSpaceTrucker>(UGameplayStatics::LoadGameFromSlot("Save01", 0)))
+	for (FActorSaveData& saveData : saveGame->savedDynamicActors)
 	{
-		for (const FActorSaveData& actorData : saveGame->SavedDynamicActors)
+		// Check it even though it should never fail.
+		if (saveData.actorClass)
 		{
-			// Check it even though it should never fail.
-			if (actorData.actorClass)
-			{
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-				//SpawnParams.TransformScaleMethod = actorData.;
-		
-				// Instantiate the actor into the active Level.
-				if (AActor* newActor = GetWorld()->SpawnActor<AActor>(actorData.actorClass, actorData.transform,
-				                                                      SpawnParams))
-				{
-					// Track any spawned actors in our list.
-					solarSystemShadowList.Add(newActor);
+			FActorSpawnParameters spawnParameters;
+			spawnParameters.Name = saveData.name;
+			spawnParameters.bHideFromSceneOutliner = false;
+			spawnParameters.ObjectFlags |= RF_Transient;
+			spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+			spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-					// Hydrate the newly spawned actor.
-					FMemoryReader memoryReader(actorData.serializedData);
-					FObjectAndNameAsStringProxyArchive Archive(memoryReader, true);
-					Archive.ArIsSaveGame = true;
-					newActor->Serialize(Archive);
-					
-#if WITH_EDITOR
-					// Set a label for the outliner and make our new actor a child of the universe.
-					newActor->SetActorLabel(actorData.name);
-#endif
+			// Instantiate the actor into the active Level.
+			auto actor = GetWorld()->SpawnActor<AActor>(saveData.actorClass,
+			                                            saveData.location, saveData.rotation,
+			                                            spawnParameters);
+			if (actor)
+			{
+				// Tag the actor in case we need to find it later.
+				actor->Tags.Add(FName("DynamicSpawn"));
+
+				// Need to cast to the interface to access the callback.
+				if (ISavableActorInterface* iSave = Cast<ISavableActorInterface>(actor))
+				{
+					iSave->OnPostLoad(saveData);
+					LoadActorComponents(actor, saveData);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("Loading dynamic actor without ISavableActorInterface"));
 				}
 			}
+		}
+	}
+}
+
+
+void UGameInstanceSpaceTrucker::LoadActorComponents(AActor* TargetActor, FActorSaveData& SaveData)
+{
+	// Clean up existing dynamic components first to avoid duplication.
+	TInlineComponentArray<UActorComponent*> existing(TargetActor);
+	for (UActorComponent* component : existing)
+	{
+		if (component && !component->HasAnyFlags(RF_DefaultSubObject) && !component->IsCreatedByConstructionScript())
+		{
+			component->DestroyComponent();
+		}
+	}
+
+	for (const FComponentSaveData& componentSaveData : SaveData.dynamicComponents)
+	{
+		if (!componentSaveData.componentClass) continue;
+
+		// Re-create the component.
+		UActorComponent* newComponent = NewObject<UActorComponent>(
+			TargetActor,
+			componentSaveData.componentClass,
+			componentSaveData.name
+		);
+
+		if (newComponent)
+		{
+			// All components must be registered with the engine.
+			newComponent->RegisterComponent();
+
+			// Hydrate the component from the save data.
+			FMemoryReader MemoryReader(componentSaveData.serializedData);
+			FObjectAndNameAsStringProxyArchive Archive(MemoryReader, false);
+			Archive.ArIsSaveGame = true;
+			newComponent->Serialize(Archive);
 		}
 	}
 }

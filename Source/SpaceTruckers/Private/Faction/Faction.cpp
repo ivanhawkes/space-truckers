@@ -1,4 +1,4 @@
-#include "SpaceTruckers/Public/Faction/Faction.h"
+#include "Faction/Faction.h"
 
 
 UFaction::UFaction()

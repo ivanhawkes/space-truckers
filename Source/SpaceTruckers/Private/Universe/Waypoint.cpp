@@ -1,4 +1,4 @@
-#include "SpaceTruckers/Public/Universe/Waypoint.h"
+#include "Universe/Waypoint.h"
 
 
 UWaypoint::UWaypoint()

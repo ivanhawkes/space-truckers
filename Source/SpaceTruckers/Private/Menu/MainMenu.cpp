@@ -1,5 +1,5 @@
 ﻿// 
-#include "SpaceTruckers/Public/Menu/MainMenu.h"
+#include "Menu/MainMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 

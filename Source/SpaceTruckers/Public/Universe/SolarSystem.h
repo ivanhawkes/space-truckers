@@ -1,9 +1,12 @@
 #pragma once
 
-#include "Engine/DataTable.h"
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
+#include "SaveGame/SaveGameSpaceTrucker.h"
 #include "SolarSystem.generated.h"
+
+class UGameInstanceSpaceTrucker;
 
 
 USTRUCT(BlueprintType)
@@ -16,39 +19,58 @@ struct FSolarSystem : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, Category = "Item Data")
 	FText name;
-
-	UPROPERTY(EditAnywhere, Category = "Item Data")
-	FTransform transform;
 };
 
 
 UCLASS()
-class SPACETRUCKERS_API ASolarSystemActor : public AActor
+class SPACETRUCKERS_API ASolarSystemActor : public AActor, public ISavableActorInterface
 {
 	GENERATED_BODY()
 
 public:
 	ASolarSystemActor();
 
+	/** Hook into the tick callback. */
 	virtual void Tick(float DeltaTime) override;
 
-	/** Have we already loaded the universe? */
-	UPROPERTY(EditAnywhere, SaveGame, Category = "Generation Parameters")
+	/** Our name for this solar system. */
+	UPROPERTY(EditAnywhere, SaveGame, Category = "Parameters")
 	FString solarSystemName;
 
-	/** Scale the sun according to this factor. */
-	UPROPERTY(EditAnywhere, SaveGame, Category = "Generation Parameters")
-	FVector sunScale{1.0f, 1.0f, 1.0f};
+	/** Mass is a scale factor vs our own sun. */
+	UPROPERTY(EditAnywhere, SaveGame, Category = "Parameters")
+	double massFactor{0.0f};
 	
-	void SetSunScale();
+	/** Density of this sun in comparision to Earth's sun. */
+	UPROPERTY(EditAnywhere, SaveGame, Category = "Parameters")
+	double densityFactor{1.0f};
+	
+	/** Angular rotation around the axis for this body in degrees. */
+	UPROPERTY(EditAnywhere, SaveGame, Category = "Orbit")
+	double axialRotation{0.0f};
+	
+	UFUNCTION(BlueprintCallable, Category = "Orbit")
+	double GetGravity();
+	
+	// Called right after spawning each dynamic actor for a new game.
+	virtual void OnPostInitialSpawn() override;
+	
+	// Called right before data serialization.
+	virtual bool OnPreSave(FActorSaveData& SaveData) override;
+	
+	// Called right after data deserialization.
+	virtual bool OnPostLoad(FActorSaveData& SaveData) override;
+	
+	// In-built lifecycle overrides.
+	virtual void PostInitProperties() override;
+	virtual void PostLoad() override;
+	virtual void PostActorCreated() override;
+	virtual void PostInitializeComponents() override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 private:
-	class USolarSystemComponent* solarSystemComponent;
-
-	// Mesh for our sun.
-	UStaticMeshComponent* sunMeshComponent;
+	UGameInstanceSpaceTrucker* gameInstance;
 };

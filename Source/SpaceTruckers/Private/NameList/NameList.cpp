@@ -1,1 +1,1 @@
-#include "SpaceTruckers/Public/NameList/NameList.h"
+#include "NameList/NameList.h"

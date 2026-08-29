@@ -1,1 +1,1 @@
-#include "SpaceTruckers/Public/Game/SoloGameMode.h"
+#include "Game/SoloGameMode.h"

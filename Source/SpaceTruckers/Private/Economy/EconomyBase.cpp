@@ -1,4 +1,4 @@
-#include "SpaceTruckers/Public/Economy/EconomyBase.h"
+#include "Economy/EconomyBase.h"
 
 
 UEconomyBase::UEconomyBase()
