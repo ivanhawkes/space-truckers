@@ -1,7 +1,7 @@
-﻿#include "Ships/Truck.h"
+﻿#include "Ships/Vehicle.h"
 
 
-ATruck::ATruck()
+ATruck::AVehicle()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
