@@ -1,14 +1,13 @@
-﻿// 
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Ships/IVehicleComponent.h"
 #include "NavigationComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class SPACETRUCKERS_API UNavigationComponent : public UActorComponent
+class SPACETRUCKERS_API UNavigationComponent : public UActorComponent, public IIVehicleComponent
 {
 	GENERATED_BODY()
 

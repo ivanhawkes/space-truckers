@@ -1,20 +1,27 @@
 ﻿#include "Ships/Vehicle.h"
 
 
-ATruck::AVehicle()
+AVehicle::AVehicle()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Create and set the base mesh as the root component.
+	sceneRoot = CreateDefaultSubobject<USceneComponent >(TEXT("SceneRoot"));
+	SetRootComponent(sceneRoot);
+
+	// Create some components that every vehicle needs.
+	cabinComponent = CreateDefaultSubobject<UCabinComponent>(TEXT("CabinComponent"));
 }
 
 
-void ATruck::BeginPlay()
+void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 
-void ATruck::Tick(float DeltaTime)
+void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
