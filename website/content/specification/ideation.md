@@ -68,8 +68,7 @@ Make a new feature Kanban for each major feature.
 ## Trade Hubs
 
 Since it's costly to enter a gravity well of any decent size most trading will
-be done with orbital platforms, captive
-asteroids, wrecks of massive ships, etc.
+be done with orbital platforms, captive asteroids, wrecks of massive ships, etc.
 
 Each trade hub will have one or more markets, probably just the one to simplify
 the game code a bit.
@@ -80,9 +79,8 @@ You can go fast, or you can go cheap, but you can't do both. Fuel burns at the
 start and end of journeys will need to be factored into the price of goods.
 
 Ships that are unmanned are preferred since this allows them to accelerate for
-long periods at multiples of gravity
-without killing the people in them. Slave ships are an obvious exception to this
-and will account for some part of the
+long periods at multiples of gravity without killing the people in them. Slave
+ships are an obvious exception to this and will account for some part of the
 very high price of slaves.
 
 Random encounters by pirates and space debris might cause shifts in the markets
@@ -93,26 +91,22 @@ Supply and demand will play a part in market rates.
 Planets might be better suited to organic materials than space stations.
 
 There is no such thing as artificial gravity or faster than light travel. Single
-exception is the quantum entangled bits
-that form a part of their galactic wide internet. A new receiver has to be
-delivered to the region the slow way first in
+exception is the quantum entangled bits that form a part of their galactic wide
+internet. A new receiver has to be delivered to the region the slow way first in
 order to achieve this faster than light transmission of information. Bandwidth
 is limited and costly.
 
 ## Tech Tree Advancement
 
 Each community will have its own level of tech advancement based on it's
-resources available,
-population (skills, health, etc), and past achievements.
+resources available, population (skills, health, etc), and past achievements.
 
 They will need to trade for materials / tech that can help advance them through
 a tech tree.
 
 NOTE: each period builds on previous periods. Some goods will drop in value at
 the start of the next period, others are evergreen and persist for the rest of
-the tree. By
-default,
-anything they make is also considered available for sale.
+the tree. By default, anything they make is also considered available for sale.
 
 Rough plan:
 
@@ -491,34 +485,32 @@ Rough plan:
         - nothing
 
 By tailoring the markets to their current needs it can make it more interesting
-and a little
-more coherent.
+and a little more coherent.
 
 NOTE: They might be in two stages at once or overlapping from one to another.
-They are not exclusive and a
-direct line forward.
+They are not exclusive and a direct line forward.
 
 # Major Categories of Advancement
 
     - agriculture
-  - industry
-  - commerce
-  - chemistry
-  - math
-  - physics
-  - arts
-  - culture
-  - literature
-  - computing
-  - communications
-  - information
+
+- industry
+- commerce
+- chemistry
+- math
+- physics
+- arts
+- culture
+- literature
+- computing
+- communications
+- information
 
 ## Stock Exchange
 
 Consider writing a fully fledged exchange system in GoLang. It should be capable
-of serving several hundred transactions
-concurrently. It could be fleshed out later if needed. This can be self hosted
-and be an optional component allowing
+of serving several hundred transactions concurrently. It could be fleshed out
+later if needed. This can be self hosted and be an optional component allowing
 guilds of players or groups to have server level infrastructure.
 
 Game server is responsible to write transactions. Client is allowed read
@@ -537,15 +529,42 @@ Should have their own creole.
 
 Corruption Index: 0 - 100
 
-With zero being complete corruption and 100 being none. There is a 
-real-world version of this which might help to categorise trade stations and 
-planets.
+With zero being complete corruption and 100 being none. There is a real-world
+version of this which might help to categorise trade stations and planets.
 
 Shipping costs:
 
-Calculated using the volume expressed in cubic metres, and the item's 
-density. This might become an approximate for things that are not simple 
-like liquids and powders e.g. toys, weapons.
+Calculated using the volume expressed in cubic metres, and the item's density.
+This might become an approximate for things that are not simple like liquids and
+powders e.g. toys, weapons.
+
+## Tech Tree Ideas
+
+* Star shaped. Breaking out into the major techs, then branching from there.
+
+* What if each node could generate points to spend further down with passing of
+time and processing of materials
+
+* Unlock buildings like an RTS, which unlocks widgets for next steps
+
+* Can have dependencies from other tech tree branches in addition to all of its
+root branches. Soft and hard links on a chart to show this.
+
+* Do chart up in Inkscape.
+
+* Put all our trade items into the chart.
+
+* Mining, farming, chemistry, physics and math, weapons, machinery, materials, etc
+
+* Need tech to start building up manufacturing. Then materials and people to
+scale.
+
+* Robots and AI replace people. Can sell them as slaves due to excess population
+
+* Planet must either provide that raw resource or trade for it. We will exclude
+barren planets until late game due to lack of key early resources.
+
+* Investment in terms of cash, material and people to advance the tech.
 
 ## References
 
