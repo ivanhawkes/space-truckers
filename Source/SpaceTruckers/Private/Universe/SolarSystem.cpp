@@ -36,6 +36,21 @@ double ASolarSystemActor::GetGravity()
 }
 
 
+double ASolarSystemActor::IsClockwise() const
+{
+	return axialRotation <= 0.0f;
+}
+
+
+double ASolarSystemActor::SpinDirection() const
+{
+	if (axialRotation <= 0.0f)
+		return -1.0f;
+	else
+		return 1.0f;
+}
+
+
 void ASolarSystemActor::OnPostInitialSpawn()
 {
 	// Set a rotation for the entire actor.

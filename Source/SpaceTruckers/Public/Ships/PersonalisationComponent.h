@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Ships/IVehicleComponent.h"
 #include "PersonalisationComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class SPACETRUCKERS_API UPersonalisationComponent : public UActorComponent
+class SPACETRUCKERS_API UPersonalisationComponent : public UActorComponent, public IIVehicleComponent
 {
 	GENERATED_BODY()
 

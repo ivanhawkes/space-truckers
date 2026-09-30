@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Ships/IVehicleComponent.h"
 #include "SensorComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class SPACETRUCKERS_API USensorComponent : public UActorComponent
+class SPACETRUCKERS_API USensorComponent : public UActorComponent, public IIVehicleComponent
 {
 	GENERATED_BODY()
 
