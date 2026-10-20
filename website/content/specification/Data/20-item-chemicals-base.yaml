@@ -1,0 +1,114 @@
+---
+item-base:
+
+# Chemicals
+  - item: &itemNeodymium
+      <<: *categoryChemicals
+      itemName: Neodymium
+      itemDescription: Neodymium
+      unitsPerCubicMetre: 1000
+      basePrice: 2.7518
+      unitType: Kilogram
+      density: 7.0
+      packFactor: 1.0
+
+  - item: &itemSodiumHydroxide
+      <<: *categoryChemicals
+      itemName: Sodium Hydroxide
+      itemDescription: Sodium Hydroxide, AKA Soda Ash
+      unitsPerCubicMetre: 100
+      basePrice: 2.7518
+      unitType: Kilolitre
+      density: 0.6
+      packFactor: 1.0
+
+  - item: &itemGraphene
+      <<: *categoryChemicals
+      itemName: Graphene
+      itemDescription: Graphene
+      unitsPerCubicMetre: 1000
+      basePrice: 1000
+      unitType: SquareMetre
+      density: 2.27
+      packFactor: 1.0
+
+  - item: &itemNitrogen
+      <<: *categoryChemicals
+      itemName: Nitrogen
+      itemDescription: Nitrogen (solid)
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 1.03      
+      packFactor: 1.0
+
+  - item: &itemPhosphorus
+      <<: *categoryChemicals
+      itemName: Phosphorus
+      itemDescription: Phosphorus
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 1.82      
+      packFactor: 1.0
+
+  - item: &itemSulfur
+      <<: *categoryChemicals
+      itemName: Sulfur
+      itemDescription: Sulfur
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 2.07      
+      packFactor: 1.0
+
+  - item: &itemSulfuricAcid
+      <<: *categoryChemicals
+      itemName: Sulfuric Acid
+      itemDescription: Sulfuric acid
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 1.84
+      packFactor: 1.0
+
+  - item: &itemAntimony
+      <<: *categoryChemicals
+      itemName: Antimony
+      itemDescription: Antimony
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 6.8      
+      packFactor: 1.0
+
+  - item: &itemChlorine
+      <<: *categoryChemicals
+      itemName: Chlorine
+      itemDescription: Chlorine (solid)
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 2.03   
+      packFactor: 1.0
+
+  - item: &itemAmmonia
+      <<: *categoryChemicals
+      itemName: Ammonia
+      itemDescription: Ammonia
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 0.68    
+      packFactor: 1.0
+
+  - item: &itemEthylene
+      <<: *categoryChemicals
+      itemName: Ethylene
+      itemDescription: Ethylene
+      unitsPerCubicMetre: 1
+      basePrice: 100
+      unitType: Kilolitre
+      density: 0.567
+      packFactor: 1.0
+...

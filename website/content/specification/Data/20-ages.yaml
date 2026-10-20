@@ -1,0 +1,45 @@
+---
+ages-base:
+- age: &stoneAge
+    ageName: Stone Age
+    ageDescription: Stone age
+- age: &copperAge
+    ageName: Copper Age
+    ageDescription: Copper Age
+- age: &bronzeAge
+    ageName: Bronze Age
+    ageDescription: Bronze Age
+- age: &ironAge
+    ageName: Iron Age
+    ageDescription: Iron Age
+- age: &classicalAge
+    ageName: Classical Age
+    ageDescription: Classical Age
+- age: &medievalAge
+    ageName: Medieval Age
+    ageDescription: Medieval Age
+- age: &preIndustrialAge
+    ageName: Pre-industrial Age
+    ageDescription: Pre-industrial Age
+- age: &industrialAge
+    ageName: Industrial Age
+    ageDescription: Industrial Age
+- age: &postIndustrialAge
+    ageName: Post-industrial Age
+    ageDescription: Post-industrial Age
+- age: &informationAge
+    ageName: Information Age
+    ageDescription: Information Age
+- age: &aiAge
+    ageName: AI Age
+    ageDescription: AI Age
+- age: &spaceAge
+    ageName: Space Age
+    ageDescription: Space Age
+- age: &spaceColonisationAge
+    ageName: Space Colonisation Age
+    ageDescription: Space Colonisation Age
+- age: &sublimationAge
+    ageName: Sublimation Age
+    ageDescription: Nothingness
+...

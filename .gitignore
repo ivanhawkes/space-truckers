@@ -10,6 +10,7 @@ node_modules/
 
 # JetBrains Rider
 *.DotSettings.user
+.idea/
 
 # JetBrains plugins
 Plugins/*
