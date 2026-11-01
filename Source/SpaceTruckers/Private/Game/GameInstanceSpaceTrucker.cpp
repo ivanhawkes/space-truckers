@@ -181,7 +181,9 @@ void UGameInstanceSpaceTrucker::CreateSolarSystems(UWorld* NewWorld, FRandomStre
 
 		FActorSpawnParameters spawnParameters;
 		spawnParameters.Name = row;
+#if WITH_EDITOR
 		spawnParameters.bHideFromSceneOutliner = false;
+#endif
 		spawnParameters.ObjectFlags |= RF_Transient;
 		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
 		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -259,7 +261,9 @@ void UGameInstanceSpaceTrucker::CreatePlanets(UWorld* NewWorld, FRandomStream Ra
 
 		FActorSpawnParameters spawnParameters;
 		spawnParameters.Name = row;
+#if WITH_EDITOR
 		spawnParameters.bHideFromSceneOutliner = false;
+#endif
 		spawnParameters.ObjectFlags |= RF_Transient;
 		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
 		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -341,7 +345,9 @@ void UGameInstanceSpaceTrucker::CreateSatellites(UWorld* NewWorld, FRandomStream
 
 		FActorSpawnParameters spawnParameters;
 		spawnParameters.Name = satelliteName;
+#if WITH_EDITOR
 		spawnParameters.bHideFromSceneOutliner = false;
+#endif
 		spawnParameters.ObjectFlags |= RF_Transient;
 		spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
 		spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -552,7 +558,9 @@ void UGameInstanceSpaceTrucker::LoadDynamicActors(USaveGameSpaceTrucker* saveGam
 		{
 			FActorSpawnParameters spawnParameters;
 			spawnParameters.Name = saveData.name;
+#if WITH_EDITOR
 			spawnParameters.bHideFromSceneOutliner = false;
+#endif
 			spawnParameters.ObjectFlags |= RF_Transient;
 			spawnParameters.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
 			spawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

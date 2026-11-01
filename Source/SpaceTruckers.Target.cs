@@ -10,5 +10,8 @@ public class SpaceTruckersTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V7;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;
 		ExtraModuleNames.Add("SpaceTruckers");
+
+		// Add this line to enforce binary precompilation for distribution
+		bPrecompile = true; 
 	}
 }
